@@ -6,6 +6,9 @@ import os
 # Obtenir l'URL de l'API depuis les variables d'environnement
 API_URL = os.getenv('API_URL', 'http://localhost:5000/upload')
 
+# Charger le modèle de cascade pour la détection de visages
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
 def capture_image():
     # Ouvrir la caméra USB (0 pour la première caméra, 1 pour la deuxième, etc.)
     cap = cv2.VideoCapture(2)
@@ -19,6 +22,11 @@ def capture_image():
 
     # Libérer la caméra
     cap.release()
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    for (x, y, w, h) in faces:
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
     if ret:
         # Enregistrer l'image capturée dans un fichier temporaire
@@ -49,4 +57,4 @@ if __name__ == '__main__':
             # Envoyer l'image à l'API
             upload_image(image_path)
         
-        time.sleep(1)
+        time.sleep(5)

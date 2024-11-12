@@ -8,7 +8,7 @@ API_URL = os.getenv('API_URL', 'http://localhost:5000/upload')
 
 def capture_image():
     # Ouvrir la caméra USB (0 pour la première caméra, 1 pour la deuxième, etc.)
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(2)
 
     if not cap.isOpened():
         print("Erreur: Impossible d'ouvrir la caméra.")
@@ -34,7 +34,7 @@ def upload_image(image_path):
     with open(image_path, 'rb') as img:
         # Envoyer la requête POST avec l'image
         files = {'image': img}
-        response = requests.post(API_URL, files=files)
+        response = requests.post("http://34.38.88.238:10002/upload", headers={'host': 'poc.faf.dev.gcp.renault.com'}, files=files)
 
     # Afficher la réponse du serveur
     print(response)
